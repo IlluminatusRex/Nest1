@@ -1,24 +1,26 @@
-import { Body, Controller, Get, NotFoundException, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 import { OrdersService } from './orders.service';
+import { UpdateOrderDTO } from './dtos/update-order.dto';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(private ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) {}
 
   @Get('/')
-  getAll(): any {
-    return this.ordersService.getAll();
-  }
+  getAll(): any {return this.ordersService.getAll();}
 
   @Get('/:id')
-  getById(@Param('id') id: string) {
-    return this.ordersService.getById(id);
+  getById(@Param('id', new ParseUUIDPipe()) id: string) {
+    const prod = this.ordersService.getById(id);
+    if (!prod) throw new NotFoundException('Product not found');
+    return prod;
   }
 
-  deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
-    if (!this.ordersService.getById(id))
-        throw new NotFoundException('Product not found');
-    this.ordersService.deleteById(id);
+  @Delete('/:id')
+  async deleteById(@Param('id', new ParseUUIDPipe()) id: string) {
+    if (!(await this.ordersService.getById(id)))
+      throw new NotFoundException('Order not found');
+    await this.ordersService.deleteById(id);
     return { success: true };
   }
   
@@ -30,12 +32,12 @@ export class OrdersController {
   @Put('/:id')
     update(
         @Param('id', new ParseUUIDPipe()) id: string,
-        @Body() productData,
+        @Body() OrderData: UpdateOrderDTO,
     ) {
         if (!this.ordersService.getById(id))
-        throw new NotFoundException('Product not found');
-
-        this.ordersService.updateOrderById(id, productData);
+            throw new NotFoundException('Order not found');
+    
+        this.ordersService.updateOrderById(id, OrderData);
         return { success: true };
     }
 
