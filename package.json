@@ -57,7 +57,7 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "4.2.0",
     "typescript": "^5.2.2",
-    "uuid": "9.0.0"
+    "uuid": "^9.0.1"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -75,7 +75,6 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-    
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

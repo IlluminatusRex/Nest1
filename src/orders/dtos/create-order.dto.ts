@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsString, IsUUID, Length,} from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
 
-export class UpdateOrderDTO {
+export class CreateOrderDTO {
   @IsNotEmpty()
   @IsUUID()
   @IsString()
